@@ -1,1 +1,426 @@
+/* ================================================
+   PANEL DE CONTROL — Daños por sismo
+   Construido sobre los tokens de styles.css (paleta, tipografía, sombras).
+   Vocabulario propio: el "nivel de afectación" se trata como una placa de
+   inspección de edificios (verde/amarillo/naranja/rojo, tipo ATC-20), no
+   como un semáforo genérico de dashboard — es la escala real que se usa en
+   evaluaciones de daño post-sismo.
+   ================================================ */
 
+:root {
+  /* Escala de severidad — 5 pasos ordenados, Sin daños → Inhabilitada.
+     "Grave" usaba el terracota de marca (clay-600 #A8441F), casi el mismo
+     tono que el rojo de "Inhabilitada" (#B23A2E) — ΔE de solo 3.2, indistin-
+     guible a simple vista (confirmado con el validador de la skill dataviz).
+     Se reemplaza por un naranja propio, validado contra Inhabilitada
+     (ΔE 17.1) y contra fondo blanco (contraste 7.3:1). */
+  --nivel-sindanos-ink:  var(--safe-ink);
+  --nivel-sindanos-bg:   var(--safe-bg);
+  --nivel-sindanos-bd:   var(--safe-border);
+  --nivel-sindanos:      var(--safe);
+
+  --nivel-leve-ink:  #5C6B1F;
+  --nivel-leve-bg:   #EFF2DE;
+  --nivel-leve-bd:   #C7D59B;
+  --nivel-leve:      #7A9C3D;
+
+  --nivel-moderado-ink: var(--caution-ink);
+  --nivel-moderado-bg:  var(--caution-bg);
+  --nivel-moderado-bd:  var(--caution-border);
+  --nivel-moderado:     var(--caution);
+
+  --nivel-grave-ink: #8A4310;
+  --nivel-grave-bg:  #FBEEDD;
+  --nivel-grave-bd:  #EDC08A;
+  --nivel-grave:     #D97B1E;
+
+  --nivel-inhab-ink: var(--danger-ink);
+  --nivel-inhab-bg:  var(--danger-bg);
+  --nivel-inhab-bd:  var(--danger-border);
+  --nivel-inhab:     var(--danger);
+
+  --nivel-ns-ink: var(--ink-600);
+  --nivel-ns-bg:  var(--ink-100);
+  --nivel-ns-bd:  var(--ink-300);
+  --nivel-ns:     var(--ink-400);
+
+  --panel-ancho: 1280px;
+}
+
+.cuerpo-panel { background: var(--ink-100); }
+
+.panel-shell {
+  max-width: var(--panel-ancho);
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+
+/* ─── Barra superior ────────────────────────────────────────── */
+
+.panel-header {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 16px 20px; margin: 0 -20px 18px;
+  background: var(--paper); border-bottom: 1px solid var(--ink-200, var(--ink-300));
+}
+
+.panel-header-marca { display: flex; align-items: center; gap: 12px; }
+.panel-header-marca > .icono-svg { width: 26px; height: 26px; color: var(--clay-600); flex-shrink: 0; }
+.panel-header-titulo { font-family: 'Zilla Slab', serif; font-weight: 600; font-size: 1.15rem; color: var(--ink-900); line-height: 1.2; }
+.panel-header-sub { font-size: 0.78rem; color: var(--ink-600); margin-top: 2px; }
+
+.panel-header-acciones { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.panel-actualizado { font-size: 0.75rem; color: var(--ink-600); }
+
+.btn-panel {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 13px; border-radius: var(--radio-sm); border: 1px solid var(--ink-300);
+  background: var(--surface); color: var(--ink-700); font-size: 0.82rem; font-weight: 500;
+  transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast);
+}
+.btn-panel .icono-svg { width: 15px; height: 15px; }
+.btn-panel:hover { border-color: var(--clay-400); color: var(--clay-700); background: var(--clay-50); }
+
+/* ─── Estados de carga / error ──────────────────────────────── */
+
+.panel-estado {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px; padding: 90px 20px; color: var(--ink-600); text-align: center;
+}
+.panel-estado .icono-svg { width: 30px; height: 30px; color: var(--danger-ink); }
+
+/* ─── Filtros ───────────────────────────────────────────────── */
+
+.panel-filtros {
+  position: sticky; top: 73px; z-index: 15;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  padding: 10px 0 14px;
+  background: var(--ink-100);
+}
+
+.campo-busqueda {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: var(--radio-sm); border: 1px solid var(--ink-300);
+  background: var(--surface); flex: 1 1 240px; min-width: 200px;
+}
+.campo-busqueda .icono-svg { width: 15px; height: 15px; color: var(--ink-400); flex-shrink: 0; }
+.campo-busqueda input {
+  border: none; outline: none; background: none; font-family: inherit; font-size: 0.85rem;
+  color: var(--ink-900); width: 100%;
+}
+.campo-busqueda input::placeholder { color: var(--ink-400); }
+
+.panel-filtros select {
+  padding: 8px 30px 8px 12px; border-radius: var(--radio-sm); border: 1px solid var(--ink-300);
+  background: var(--surface) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%236B5B4F" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>') no-repeat right 9px center / 13px;
+  appearance: none; font-family: inherit; font-size: 0.83rem; color: var(--ink-700);
+  cursor: pointer; transition: border-color var(--t-fast);
+}
+.panel-filtros select:hover { border-color: var(--clay-400); }
+
+/* ─── Tarjetas base ─────────────────────────────────────────── */
+
+.tarjeta-panel {
+  background: var(--surface); border: 1px solid var(--ink-200, var(--ink-300));
+  border-radius: var(--radio); padding: 18px 20px; box-shadow: var(--sombra-xs);
+}
+.tarjeta-panel-cabeza { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.tarjeta-panel-cabeza h2 { font-family: 'Zilla Slab', serif; font-size: 1rem; font-weight: 600; color: var(--ink-900); }
+.tarjeta-panel-nota { font-size: 0.75rem; color: var(--ink-600); }
+
+/* ─── KPIs ──────────────────────────────────────────────────── */
+
+.panel-kpis {
+  display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; margin-bottom: 18px;
+}
+
+.kpi-etiqueta { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-600); }
+
+.kpi-cobertura-cabeza { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+.kpi-cobertura-valor { font-family: 'Zilla Slab', serif; font-size: 1.3rem; font-weight: 600; color: var(--ink-900); }
+.barra-cobertura { height: 10px; background: var(--ink-150); border-radius: var(--radio-pill); overflow: hidden; }
+.barra-cobertura .relleno {
+  height: 100%; width: 0%; border-radius: var(--radio-pill);
+  background: linear-gradient(90deg, var(--clay-500), var(--clay-600));
+  transition: width 0.6s var(--ease-out);
+}
+.kpi-cobertura-pie { font-size: 0.78rem; color: var(--ink-600); margin-top: 8px; }
+.kpi-cobertura-pie span { font-weight: 700; color: var(--clay-700); }
+
+.kpi-tile { display: flex; flex-direction: column; gap: 4px; justify-content: center; }
+.kpi-numero { font-family: 'Zilla Slab', serif; font-size: 2rem; font-weight: 700; color: var(--ink-900); line-height: 1.1; }
+.kpi-sub { font-size: 0.76rem; color: var(--ink-600); }
+.kpi-critico { border-color: var(--nivel-grave-bd); background: var(--nivel-grave-bg); }
+.kpi-critico .kpi-numero { color: var(--nivel-grave-ink); }
+.kpi-critico .kpi-etiqueta, .kpi-critico .kpi-sub { color: var(--nivel-grave-ink); opacity: 0.85; }
+
+/* ─── Gráficos: barras horizontales caseras ────────────────── */
+
+.panel-graficos { display: grid; grid-template-columns: 1fr 1.3fr; align-items: start; gap: 14px; margin-bottom: 18px; }
+
+.panel-conectividad { margin-bottom: 18px; }
+.panel-conectividad .barras-horizontales { max-height: 280px; overflow-y: auto; overflow-x: hidden; padding-right: 4px; }
+
+.barras-horizontales { display: flex; flex-direction: column; gap: 10px; }
+.barras-municipio { max-height: 360px; overflow-y: auto; overflow-x: hidden; padding-right: 4px; }
+
+/* En pantallas anchas, "Sedes reportadas por municipio" se ajusta en JS
+   (igualarAlturaGraficos en dashboard.js) a la altura real de la tarjeta
+   "Nivel de afectación", para que ambas tarjetas queden parejas. La lista
+   de municipios llena ese espacio y hace scroll interno en vez de estirar
+   la tarjeta. Por debajo de 1000px las tarjetas se apilan (una columna) y
+   esto se desactiva — ver el media query correspondiente. */
+@media (min-width: 1001px) {
+  .grafico-municipio { display: flex; flex-direction: column; }
+  .grafico-municipio .barras-municipio { flex: 1 1 0; min-height: 0; max-height: none; }
+}
+
+.fila-barra {
+  display: grid; grid-template-columns: 140px 1fr 40px; align-items: center; gap: 10px;
+  padding: 3px 6px; margin: 0 -6px; border-radius: 8px; border: 1px solid transparent;
+  transition: background var(--t-fast), border-color var(--t-fast);
+}
+.fila-barra-click { cursor: pointer; }
+.fila-barra-click:hover { background: var(--clay-50); }
+.fila-barra-click:hover .etiqueta-barra { color: var(--clay-700); font-weight: 600; }
+
+.fila-barra-detalle-wrap.abierto > .fila-barra-click { background: var(--clay-50); border-color: var(--clay-300); }
+.fila-barra-detalle-wrap.abierto > .fila-barra-click .etiqueta-barra { color: var(--clay-700); font-weight: 700; }
+.fila-barra-detalle-wrap.abierto > .fila-barra-click .valor-barra { color: var(--clay-700); }
+
+.detalle-expandido {
+  /* Antes se armaba con <details>/<summary> nativo + una animación de
+     entrada — ambas cosas daban problemas reales: el 'toggle' fantasma
+     que dispara el navegador al destruir un <details> abierto (vía
+     innerHTML) rompía el estado de los filtros, y la animación opacity
+     0→1 se quedaba pegada en 0 dentro de un <details> recién abierto.
+     Ahora es un <div> con clic explícito y display controlado a mano. */
+  display: flex; flex-wrap: wrap; gap: 6px 10px;
+  padding: 8px 0 10px; margin: 0 0 4px;
+}
+.detalle-expandido-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.78rem; color: var(--ink-700);
+  background: var(--ink-100); border-radius: 7px; padding: 4px 9px 4px 4px;
+}
+.detalle-expandido-item span:last-child { font-weight: 700; font-variant-numeric: tabular-nums; }
+.detalle-expandido-item .placa-nivel { font-size: 0.68rem; padding: 2px 7px 2px 6px; }
+.detalle-expandido-vacio { font-size: 0.78rem; color: var(--ink-600); font-style: italic; padding: 4px 6px; }
+
+.fila-barra .etiqueta-barra {
+  font-size: 0.82rem; color: var(--ink-700); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  cursor: default;
+}
+.fila-barra .pista-barra {
+  height: 20px; background: var(--ink-100); border-radius: 6px; overflow: hidden; position: relative;
+  display: flex;
+}
+.fila-barra .pista-barra .segmento {
+  height: 100%; width: 0; transition: width 0.5s var(--ease-out);
+  border-right: 2px solid var(--surface);
+}
+.fila-barra .pista-barra .segmento:last-child { border-right: none; }
+.fila-barra .valor-barra { font-size: 0.8rem; font-weight: 600; color: var(--ink-700); text-align: right; font-variant-numeric: tabular-nums; }
+
+.fila-barra .pista-barra { cursor: default; }
+.fila-barra .segmento[data-tip] { position: relative; }
+.fila-barra .segmento[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
+  background: var(--ink-900); color: #fff; font-size: 0.72rem; font-weight: 500;
+  padding: 5px 9px; border-radius: 7px; white-space: nowrap; z-index: 10;
+  box-shadow: var(--sombra-sm);
+}
+
+/* Leyenda de severidad (compartida por el gráfico de nivel y municipio) */
+.leyenda-nivel { display: flex; flex-wrap: wrap; gap: 10px 14px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--ink-150); }
+.leyenda-nivel-item { display: flex; align-items: center; gap: 6px; font-size: 0.76rem; color: var(--ink-600); }
+.leyenda-nivel-punto { width: 9px; height: 9px; border-radius: 3px; flex-shrink: 0; }
+
+/* ─── Placa de nivel (elemento distintivo) ─────────────────── */
+/* Referencia: placas de inspección de edificios post-sismo (verde =
+   habitable, amarillo = uso restringido, rojo = inhabitable). Cada nivel
+   se muestra siempre como esta misma placa — en la tabla, en el detalle,
+   en la leyenda — para que la clasificación se reconozca de un vistazo. */
+
+.placa-nivel {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 9px 3px 7px; border-radius: 5px; border: 1px solid; border-left-width: 4px;
+  font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.placa-nivel[data-nivel="Sin daños"]    { color: var(--nivel-sindanos-ink); background: var(--nivel-sindanos-bg); border-color: var(--nivel-sindanos-bd); border-left-color: var(--nivel-sindanos); }
+.placa-nivel[data-nivel="Leve"]         { color: var(--nivel-leve-ink); background: var(--nivel-leve-bg); border-color: var(--nivel-leve-bd); border-left-color: var(--nivel-leve); }
+.placa-nivel[data-nivel="Moderado"]     { color: var(--nivel-moderado-ink); background: var(--nivel-moderado-bg); border-color: var(--nivel-moderado-bd); border-left-color: var(--nivel-moderado); }
+.placa-nivel[data-nivel="Grave"]        { color: var(--nivel-grave-ink); background: var(--nivel-grave-bg); border-color: var(--nivel-grave-bd); border-left-color: var(--nivel-grave); }
+.placa-nivel[data-nivel="Inhabilitada"] { color: var(--nivel-inhab-ink); background: var(--nivel-inhab-bg); border-color: var(--nivel-inhab-bd); border-left-color: var(--nivel-inhab); }
+.placa-nivel[data-nivel="__sin_nivel__"], .placa-nivel:not([data-nivel]) { color: var(--nivel-ns-ink); background: var(--nivel-ns-bg); border-color: var(--nivel-ns-bd); border-left-color: var(--nivel-ns); }
+
+.placa-estado {
+  display: inline-flex; align-items: center; padding: 3px 9px; border-radius: var(--radio-pill);
+  font-size: 0.74rem; font-weight: 600; white-space: nowrap;
+}
+.placa-estado[data-estado="Completo"] { color: var(--safe-ink); background: var(--safe-bg); }
+.placa-estado[data-estado="Borrador"] { color: var(--caution-ink); background: var(--caution-bg); }
+
+.placa-conectividad {
+  display: inline-flex; align-items: center; padding: 3px 9px; border-radius: var(--radio-pill);
+  font-size: 0.74rem; font-weight: 600; white-space: nowrap; border: 1px solid transparent;
+}
+.placa-conectividad[data-conectividad="si"] { color: var(--safe-ink); background: var(--safe-bg); border-color: var(--safe-border); }
+.placa-conectividad[data-conectividad="no"] { color: var(--danger-ink); background: var(--danger-bg); border-color: var(--danger-border); }
+.placa-conectividad[data-conectividad="sin_dato"] { color: var(--ink-600); background: var(--ink-100); border-color: var(--ink-300); }
+
+/* Banner grande de conectividad en el panel de detalle de sede — más
+   visible que la placa chica de la tabla, con ícono y color de fondo. */
+.detalle-conectividad-banner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: var(--radio-sm); border: 1.5px solid transparent;
+  font-size: 0.9rem; font-weight: 700; margin-bottom: 18px;
+}
+.detalle-conectividad-banner .icono-svg { width: 20px; height: 20px; flex-shrink: 0; }
+.detalle-conectividad-banner[data-conectividad="si"] { color: var(--safe-ink); background: var(--safe-bg); border-color: var(--safe-border); }
+.detalle-conectividad-banner[data-conectividad="no"] { color: var(--danger-ink); background: var(--danger-bg); border-color: var(--danger-border); }
+.detalle-conectividad-banner[data-conectividad="sin_dato"] { color: var(--ink-600); background: var(--ink-100); border-color: var(--ink-300); }
+
+/* ─── Tabla ─────────────────────────────────────────────────── */
+
+.panel-tabla-wrap { padding: 18px 0 8px; }
+.panel-tabla-wrap .tarjeta-panel-cabeza { padding: 0 20px; }
+.tabla-scroll { overflow-x: auto; }
+
+.tabla-panel { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+.tabla-panel thead th {
+  position: sticky; top: 0; background: var(--surface);
+  text-align: left; padding: 10px 14px; font-size: 0.72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-600);
+  border-bottom: 1px solid var(--ink-200, var(--ink-300)); white-space: nowrap; cursor: pointer;
+  user-select: none;
+}
+.tabla-panel thead th:hover { color: var(--clay-700); }
+.tabla-panel thead th .icono-orden { width: 11px; height: 11px; opacity: 0.35; margin-left: 2px; vertical-align: -1px; }
+.tabla-panel thead th.orden-activo .icono-orden { opacity: 1; color: var(--clay-600); }
+.tabla-panel thead th.orden-desc .icono-orden { transform: scaleY(-1); }
+
+.tabla-panel tbody tr { cursor: pointer; transition: background var(--t-fast); }
+.tabla-panel tbody tr:hover { background: var(--clay-50); }
+.tabla-panel tbody tr:not(:last-child) { border-bottom: 1px solid var(--ink-150); }
+.tabla-panel td { padding: 11px 14px; color: var(--ink-700); white-space: nowrap; }
+.tabla-panel td.col-institucion, .tabla-panel td.col-sede { white-space: normal; max-width: 220px; }
+
+.contador-evidencia { display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums; color: var(--ink-600); font-size: 0.78rem; }
+.contador-evidencia .icono-svg { width: 13px; height: 13px; }
+
+.tabla-vacia { text-align: center; padding: 40px 20px; color: var(--ink-600); font-size: 0.85rem; }
+
+/* ─── Panel lateral de detalle ──────────────────────────────── */
+
+.panel-detalle {
+  position: fixed; inset: 0; z-index: 210;
+  display: flex; justify-content: flex-end;
+}
+.panel-detalle.oculto { display: none; }
+.panel-detalle-fondo { position: absolute; inset: 0; background: rgba(30, 20, 14, 0.4); }
+
+.panel-detalle-caja {
+  position: relative; width: min(440px, 100%); height: 100%; background: var(--paper);
+  box-shadow: var(--sombra-lg); overflow-y: auto; padding: 22px;
+  animation: entrada-panel-detalle 0.22s var(--ease-out);
+}
+@keyframes entrada-panel-detalle { from { transform: translateX(24px); opacity: 0.6; } to { transform: translateX(0); opacity: 1; } }
+
+.panel-detalle-cerrar {
+  position: absolute; top: 18px; right: 18px; background: none; border: none; color: var(--ink-600);
+  padding: 7px; border-radius: 7px; display: flex; transition: background var(--t-fast), color var(--t-fast);
+}
+.panel-detalle-cerrar:hover { background: var(--danger-bg); color: var(--danger-ink); }
+.panel-detalle-cerrar .icono-svg { width: 16px; height: 16px; }
+
+.detalle-titulo { font-family: 'Zilla Slab', serif; font-size: 1.2rem; font-weight: 600; color: var(--ink-900); padding-right: 30px; }
+.detalle-sub { font-size: 0.83rem; color: var(--ink-600); margin-top: 3px; }
+.detalle-placas { display: flex; gap: 8px; margin: 12px 0 18px; flex-wrap: wrap; }
+
+.detalle-bloque { margin-bottom: 18px; }
+.detalle-bloque h3 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-600); margin-bottom: 8px; }
+.detalle-linea { display: flex; justify-content: space-between; gap: 10px; font-size: 0.85rem; padding: 6px 0; border-bottom: 1px solid var(--ink-150); }
+.detalle-linea span:first-child { color: var(--ink-600); }
+.detalle-linea span:last-child { color: var(--ink-900); font-weight: 500; text-align: right; }
+.detalle-descripcion { font-size: 0.87rem; color: var(--ink-700); line-height: 1.5; background: var(--surface); border-radius: var(--radio-sm); padding: 12px; border: 1px solid var(--ink-200, var(--ink-300)); }
+
+.detalle-evidencias { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.detalle-evidencia-item {
+  position: relative; aspect-ratio: 1; border-radius: 9px; overflow: hidden; cursor: pointer;
+  background: var(--ink-150); border: 1px solid var(--ink-200, var(--ink-300));
+  display: flex; align-items: center; justify-content: center; transition: transform var(--t-fast);
+}
+.detalle-evidencia-item:hover { transform: scale(1.03); }
+.detalle-evidencia-item img { width: 100%; height: 100%; object-fit: cover; }
+.detalle-evidencia-item .icono-svg { width: 22px; height: 22px; color: var(--ink-500, var(--ink-600)); }
+.detalle-evidencia-item .miniatura-play { position: absolute; inset: 0; margin: 0; width: auto; height: auto; border-radius: 0; background: rgba(0,0,0,0.25); }
+.detalle-sin-evidencia { font-size: 0.83rem; color: var(--ink-600); font-style: italic; }
+
+.detalle-enlace-drive {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 4px;
+  font-size: 0.82rem; font-weight: 600; color: var(--clay-700);
+}
+
+/* ─── Responsive ────────────────────────────────────────────── */
+
+@media (max-width: 1000px) {
+  .panel-kpis { grid-template-columns: 1fr 1fr; }
+  .panel-graficos { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .panel-shell { padding: 0 12px 40px; }
+  .panel-header { margin: 0 -12px 14px; flex-wrap: wrap; }
+  .panel-filtros { top: 116px; }
+  .panel-kpis { grid-template-columns: 1fr 1fr; }
+  .kpi-cobertura { grid-column: 1 / -1; }
+  .fila-barra { grid-template-columns: 92px 1fr 32px; }
+  .panel-detalle-caja { width: 100%; }
+}
+
+/* ─── Pantalla de Login ─────────────────────────────────────── */
+.login-card {
+  max-width: 420px;
+  margin: 80px auto;
+  padding: 30px;
+  animation: slide-up 0.4s var(--ease-out);
+}
+
+.login-card-head {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.login-card-head .icono-svg {
+  width: 48px;
+  height: 48px;
+  color: var(--clay-600);
+  margin-bottom: 12px;
+}
+
+.login-card-head h2 {
+  font-family: 'Zilla Slab', serif;
+  font-size: 1.55rem;
+  font-weight: 600;
+  color: var(--ink-900);
+}
+
+.login-card-head p {
+  font-size: 0.88rem;
+  color: var(--ink-600);
+  margin-top: 4px;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
