@@ -65,8 +65,8 @@
 }
 
 .panel-header-marca { display: flex; align-items: center; gap: 12px; }
-.panel-header-marca > .icono-svg { width: 26px; height: 26px; color: var(--clay-600); flex-shrink: 0; }
-.panel-header-titulo { font-family: 'Zilla Slab', serif; font-weight: 600; font-size: 1.15rem; color: var(--ink-900); line-height: 1.2; }
+.panel-header-logo-img { max-height: 44px; width: auto; object-fit: contain; }
+.panel-header-titulo { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.15rem; color: var(--ink-900); line-height: 1.2; }
 .panel-header-sub { font-size: 0.78rem; color: var(--ink-600); margin-top: 2px; }
 
 .panel-header-acciones { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -125,7 +125,7 @@
   border-radius: var(--radio); padding: 18px 20px; box-shadow: var(--sombra-xs);
 }
 .tarjeta-panel-cabeza { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
-.tarjeta-panel-cabeza h2 { font-family: 'Zilla Slab', serif; font-size: 1rem; font-weight: 600; color: var(--ink-900); }
+.tarjeta-panel-cabeza h2 { font-family: 'Poppins', sans-serif; font-size: 1.05rem; font-weight: 600; color: var(--ink-900); }
 .tarjeta-panel-nota { font-size: 0.75rem; color: var(--ink-600); }
 
 /* ─── KPIs ──────────────────────────────────────────────────── */
@@ -137,7 +137,7 @@
 .kpi-etiqueta { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-600); }
 
 .kpi-cobertura-cabeza { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
-.kpi-cobertura-valor { font-family: 'Zilla Slab', serif; font-size: 1.3rem; font-weight: 600; color: var(--ink-900); }
+.kpi-cobertura-valor { font-family: 'Poppins', sans-serif; font-size: 1.3rem; font-weight: 600; color: var(--ink-900); }
 .barra-cobertura { height: 10px; background: var(--ink-150); border-radius: var(--radio-pill); overflow: hidden; }
 .barra-cobertura .relleno {
   height: 100%; width: 0%; border-radius: var(--radio-pill);
@@ -148,7 +148,7 @@
 .kpi-cobertura-pie span { font-weight: 700; color: var(--clay-700); }
 
 .kpi-tile { display: flex; flex-direction: column; gap: 4px; justify-content: center; }
-.kpi-numero { font-family: 'Zilla Slab', serif; font-size: 2rem; font-weight: 700; color: var(--ink-900); line-height: 1.1; }
+.kpi-numero { font-family: 'Poppins', sans-serif; font-size: 2rem; font-weight: 700; color: var(--ink-900); line-height: 1.1; }
 .kpi-sub { font-size: 0.76rem; color: var(--ink-600); }
 .kpi-critico { border-color: var(--nivel-grave-bd); background: var(--nivel-grave-bg); }
 .kpi-critico .kpi-numero { color: var(--nivel-grave-ink); }
@@ -336,7 +336,7 @@
 .panel-detalle-cerrar:hover { background: var(--danger-bg); color: var(--danger-ink); }
 .panel-detalle-cerrar .icono-svg { width: 16px; height: 16px; }
 
-.detalle-titulo { font-family: 'Zilla Slab', serif; font-size: 1.2rem; font-weight: 600; color: var(--ink-900); padding-right: 30px; }
+.detalle-titulo { font-family: 'Poppins', sans-serif; font-size: 1.2rem; font-weight: 600; color: var(--ink-900); padding-right: 30px; }
 .detalle-sub { font-size: 0.83rem; color: var(--ink-600); margin-top: 3px; }
 .detalle-placas { display: flex; gap: 8px; margin: 12px 0 18px; flex-wrap: wrap; }
 
@@ -394,15 +394,15 @@
   margin-bottom: 25px;
 }
 
-.login-card-head .icono-svg {
-  width: 48px;
-  height: 48px;
-  color: var(--clay-600);
-  margin-bottom: 12px;
+.login-logo-img {
+  max-height: 80px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 15px;
 }
 
 .login-card-head h2 {
-  font-family: 'Zilla Slab', serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 1.55rem;
   font-weight: 600;
   color: var(--ink-900);

@@ -1,35 +1,32 @@
 /* ================================================
-   ENCUESTA DE DAÑOS POR SISMO — Estilos
-   Comité de Cafeteros de Caldas
+   REPORTE DE DAÑOS — Estilos El Nogal Club Residencial
    ================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
-/* ─── Paleta ─────────────────────────────────
-   Terracota/arcilla y tierra — techos de barro y suelo cafetero de Caldas —
-   en vez del verde genérico repetido en el resto de los formularios del
-   programa. El verde queda reservado como significado semántico ("a salvo" /
-   "completo"), no como color de marca.
-   ───────────────────────────────────────────── */
+/* ─── Paleta de Colores de El Nogal ─────────── */
 :root {
-  /* Neutros cálidos */
-  --paper:      #FAF5EE;
+  /* Neutros cálidos / corporativos */
+  --paper:      #eef1f2;
   --surface:    #FFFFFF;
-  --ink-900:    #241C16;
-  --ink-700:    #4A3B31;
-  --ink-600:    #6B5B4F;
-  --ink-400:    #9C8C7D;
-  --ink-300:    #DED3C5;
-  --ink-150:    #ECE4D9;
-  --ink-100:    #F5EFE6;
+  --ink-900:    #0d0a19; /* Azul violeta muy oscuro */
+  --ink-700:    #444444; /* Gris oscuro */
+  --ink-600:    #66676c; /* Gris medio */
+  --ink-400:    #a8a8a8; /* Gris claro */
+  --ink-300:    #EBEBEB; /* Borde */
+  --ink-150:    #F2F2F2;
+  --ink-100:    #f5f5f5;
 
-  /* Marca — arcilla / terracota */
-  --clay-700:   #7A3419;
-  --clay-600:   #A8441F;
-  --clay-500:   #BC5228;
-  --clay-300:   #E0A47C;
-  --clay-100:   #F6E3D3;
-  --clay-50:    #FBF1E8;
+  /* Colores de marca: Dorado y Azul de El Nogal */
+  --clay-700:   #CC9923; /* Dorado oscuro */
+  --clay-600:   #F1BF4E; /* Dorado intermedio */
+  --clay-500:   #ffcb5c; /* Dorado principal de El Nogal */
+  --clay-300:   #ffd67d;
+  --clay-100:   #fff0ce;
+  --clay-50:    #fff7e6;
+  
+  --brand-dark: #251F3C; /* Azul índigo de subheaders */
+  --brand-blue: #5055f0; /* Enlaces y acentos activos */
 
   /* Semántico: a salvo / completo */
   --safe-ink:    #1F5C38;
@@ -55,10 +52,10 @@
   --info-bg:     #EAF1F8;
   --info-border: #BFD7EC;
 
-  --sombra-xs:  0 1px 2px rgba(36,28,22,0.06);
-  --sombra-sm:  0 2px 6px rgba(36,28,22,0.07), 0 1px 2px rgba(36,28,22,0.05);
-  --sombra:     0 8px 24px rgba(36,28,22,0.10), 0 2px 8px rgba(36,28,22,0.05);
-  --sombra-lg:  0 16px 44px rgba(36,28,22,0.14), 0 4px 14px rgba(36,28,22,0.07);
+  --sombra-xs:  0 1px 2px rgba(13,10,25,0.06);
+  --sombra-sm:  0 2px 6px rgba(13,10,25,0.07), 0 1px 2px rgba(13,10,25,0.05);
+  --sombra:     0 8px 24px rgba(13,10,25,0.10), 0 2px 8px rgba(13,10,25,0.05);
+  --sombra-lg:  0 16px 44px rgba(13,10,25,0.14), 0 4px 14px rgba(13,10,25,0.07);
 
   --radio:      16px;
   --radio-sm:   11px;
@@ -85,27 +82,31 @@ html { -webkit-text-size-adjust: 100%; }
 }
 
 body {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 400;
   background: var(--paper);
-  color: var(--ink-900);
+  color: var(--ink-700);
   min-height: 100vh;
   line-height: 1.55;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2 { font-family: 'Zilla Slab', serif; line-height: 1.2; letter-spacing: -0.01em; }
+h1, h2, h3, h5, h6 { font-family: 'Poppins', sans-serif; line-height: 1.25; letter-spacing: -0.01em; color: var(--ink-900); }
+h1 { font-weight: 700; }
+h2 { font-weight: 600; }
+h4 { font-family: 'Crimson Text', serif; font-style: italic; color: var(--ink-900); }
 
 button { font-family: inherit; cursor: pointer; }
 input, select, textarea { font-family: inherit; font-size: 1rem; }
 
-a { color: var(--clay-600); }
+a { color: var(--brand-blue); text-decoration: none; transition: color var(--t-fast); }
+a:hover { color: var(--clay-700); }
 
 .oculto { display: none !important; }
 
 :focus-visible {
-  outline: 2.5px solid var(--clay-500);
+  outline: 2.5px solid var(--clay-600);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -126,39 +127,36 @@ a { color: var(--clay-600); }
 
 /* ─── Header ────────────────────────────────── */
 .header {
-  background: linear-gradient(150deg, #4A1D0C 0%, #6B2A12 26%, #8F3C1A 58%, #A8441F 100%);
-  color: #FBF1E8;
-  padding: 30px 20px 40px;
+  background: linear-gradient(rgba(13, 10, 25, 0.76), rgba(37, 31, 60, 0.82)), url('https://elnogalclubresidencial.com/wp-content/uploads/2024/12/IMG-20241205-WA0013.jpg') no-repeat center center / cover;
+  color: #FFFFFF;
+  padding: 50px 20px 65px;
   text-align: center;
   position: relative;
   overflow: hidden;
-}
-
-.header::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle 520px at -8% 118%, rgba(217,154,43,0.22) 0%, transparent 58%),
-    radial-gradient(circle 380px at 106% -12%, rgba(255,255,255,0.10) 0%, transparent 52%),
-    radial-gradient(circle 260px at 50% 112%, rgba(255,255,255,0.06) 0%, transparent 60%);
-  pointer-events: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 
 .header-inner { position: relative; max-width: 640px; margin: 0 auto; }
 
 .header-marca {
-  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
-  margin-bottom: 16px; opacity: 0.92;
-}
-.header-marca .icono-svg { width: 22px; height: 22px; color: var(--clay-300); }
-.header-marca span {
-  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: 22px;
 }
 
-.header-titulo { font-size: 1.65rem; font-weight: 600; margin-bottom: 10px; }
+.header-logo-img {
+  max-height: 80px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.18));
+  transition: transform var(--t-fast);
+}
+.header-logo-img:hover {
+  transform: scale(1.03);
+}
 
-.header-sub { font-size: 0.94rem; opacity: 0.92; max-width: 460px; margin: 0 auto; line-height: 1.6; }
+.header-titulo { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: #FFFFFF; letter-spacing: -0.01em; }
+
+.header-sub { font-size: 0.94rem; opacity: 0.94; max-width: 480px; margin: 0 auto; line-height: 1.65; font-weight: 300; }
 
 /* ─── Contenedor principal ──────────────────── */
 .contenedor { max-width: 640px; margin: -18px auto 0; padding: 0 16px 64px; position: relative; }
@@ -291,8 +289,8 @@ select.control:disabled {
   white-space: nowrap;
 }
 
-.btn-primario { background: linear-gradient(135deg, var(--clay-500), var(--clay-700)); color: #fff; box-shadow: 0 3px 14px rgba(168,68,31,0.32); }
-.btn-primario:hover:not(:disabled) { transform: translateY(-1.5px); box-shadow: 0 6px 18px rgba(168,68,31,0.38); }
+.btn-primario { background: linear-gradient(135deg, var(--clay-500), var(--clay-600)); color: var(--brand-dark); box-shadow: 0 3px 14px rgba(204,153,35,0.25); }
+.btn-primario:hover:not(:disabled) { transform: translateY(-1.5px); box-shadow: 0 6px 18px rgba(204,153,35,0.35); background: linear-gradient(135deg, var(--clay-600), var(--clay-700)); color: #fff; }
 .btn-primario:active:not(:disabled) { transform: translateY(0); }
 .btn-primario:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
 
