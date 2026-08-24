@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+<title>Club Residencial El Nogal — Reporte de Daños</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ─── Sprite de íconos (SVG en línea, trazo único) ───────── -->
+<svg style="display:none" aria-hidden="true">
+  <symbol id="icono-casa-grieta" viewBox="0 0 24 24">
+    <path d="M4 11 12 4l8 7"/>
+    <path d="M6 10v9a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-9"/>
+    <path d="M11 20v-5l-1.4 1.8L11 15l-1.6 2.4L11 20"/>
+  </symbol>
+  <symbol id="icono-usuario" viewBox="0 0 24 24">
+    <circle cx="12" cy="8" r="4"/>
+    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+  </symbol>
+  <symbol id="icono-portapapeles" viewBox="0 0 24 24">
+    <path d="M9 3.6h6a1 1 0 0 1 1 1V6h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h1V4.6a1 1 0 0 1 1-1Z"/>
+    <path d="M9 12h6M9 16h4"/>
+  </symbol>
+  <symbol id="icono-camara" viewBox="0 0 24 24">
+    <path d="M4 8a2 2 0 0 1 2-2h1.2l1-1.6A1.5 1.5 0 0 1 9.5 3.6h5a1.5 1.5 0 0 1 1.3.8L16.8 6H18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/>
+    <circle cx="12" cy="13" r="3.4"/>
+  </symbol>
+  <symbol id="icono-video" viewBox="0 0 24 24">
+    <rect x="3" y="6" width="12" height="12" rx="2"/>
+    <path d="m15 10.3 5.2-3.4a.8.8 0 0 1 1.3.6v9a.8.8 0 0 1-1.3.6L15 13.7"/>
+  </symbol>
+  <symbol id="icono-basura" viewBox="0 0 24 24">
+    <path d="M4 7h16"/>
+    <path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+    <path d="M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"/>
+    <path d="M10 11v6M14 11v6"/>
+  </symbol>
+  <symbol id="icono-mas" viewBox="0 0 24 24">
+    <path d="M12 5v14M5 12h14"/>
+  </symbol>
+  <symbol id="icono-x" viewBox="0 0 24 24">
+    <path d="m6 6 12 12M18 6 6 18"/>
+  </symbol>
+  <symbol id="icono-marcador" viewBox="0 0 24 24">
+    <path d="M12 21s7-6.1 7-11.5a7 7 0 0 0-14 0C5 14.9 12 21 12 21Z"/>
+    <circle cx="12" cy="9.5" r="2.4"/>
+  </symbol>
+  <symbol id="icono-check-circulo" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9"/>
+    <path d="m8 12.4 2.6 2.6L16 9.6"/>
+  </symbol>
+  <symbol id="icono-alerta" viewBox="0 0 24 24">
+    <path d="M12 4 22 20H2Z" stroke-linejoin="round"/>
+    <path d="M12 10.2v3.6"/>
+    <circle cx="12" cy="17" r="0.9" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="icono-circulo" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8"/>
+  </symbol>
+  <symbol id="icono-documento" viewBox="0 0 24 24">
+    <path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/>
+    <path d="M14 3v5h5"/>
+    <path d="M9 13h6M9 17h6"/>
+  </symbol>
+</svg>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="header-marca">
+      <svg class="icono-svg" aria-hidden="true"><use href="#icono-casa-grieta"/></svg>
+      <span>Club Residencial El Nogal</span>
+    </div>
+    <h1 class="header-titulo">Reporte de Daños en Apartamentos</h1>
+    <p class="header-sub">Por favor, registra el estado de afectación de tu apartamento. Si ya has reportado antes, introduce tu correo y contraseña para cargar tus registros, revisarlos o actualizarlos.</p>
+  </div>
+</header>
+
+<main class="contenedor">
+
+  <!-- Estado: cargando catálogos -->
+  <div id="cargandoCatalogos" class="cargando-catalogos">
+    <div class="spinner"></div>
+    <p>Conectando con el servidor...</p>
+  </div>
+
+  <!-- Estado: error al cargar catálogos -->
+  <div id="errorCatalogos" class="error-catalogos oculto">
+    <p style="color:var(--danger-ink); font-weight:600; margin-bottom:10px;">No se pudo conectar con el sistema.</p>
+    <p style="margin-bottom:16px;">Verifica tu conexión a internet e intenta de nuevo.</p>
+    <button type="button" class="btn btn-primario" onclick="location.reload()">Reintentar</button>
+  </div>
+
+  <!-- Formulario principal -->
+  <form id="formulario" class="oculto" onsubmit="return false;">
+
+    <div id="mensajeError" class="alerta alerta-error oculto">
+      <svg class="icono-svg" aria-hidden="true"><use href="#icono-alerta"/></svg>
+      <span data-role="texto"></span>
+    </div>
+    <div id="avisoBorrador" class="alerta alerta-aviso oculto">
+      <svg class="icono-svg" aria-hidden="true"><use href="#icono-portapapeles"/></svg>
+      <span>Se recuperaron datos locales. Las fotos y videos <strong>no</strong> se guardan en el borrador — vuelve a adjuntarlos antes de enviar.</span>
+    </div>
+
+    <!-- Tus Datos -->
+    <section class="card">
+      <div class="card-head">
+        <span class="icono"><svg class="icono-svg" aria-hidden="true"><use href="#icono-usuario"/></svg></span>
+        <h2>Tus datos de contacto</h2>
+      </div>
+      <div class="card-body">
+        <div class="campo">
+          <label for="registradorNombre">Nombre completo<span class="req">*</span></label>
+          <input type="text" id="registradorNombre" class="control" placeholder="Ingresa tu nombre y apellidos" required />
+        </div>
+        <div class="campo-fila">
+          <div class="campo">
+            <label for="registradorCorreo">Correo electrónico<span class="req">*</span></label>
+            <input type="email" id="registradorCorreo" class="control" placeholder="correo@ejemplo.com" required />
+          </div>
+          <div class="campo">
+            <label for="registradorTelefono">Teléfono de contacto<span class="req">*</span></label>
+            <input type="tel" id="registradorTelefono" class="control" placeholder="Ej: 3001234567" required />
+          </div>
+        </div>
+        <div class="campo-fila" style="align-items: flex-end;">
+          <div class="campo" style="margin-bottom:0;">
+            <label for="registradorContrasena">Contraseña de acceso<span class="req">*</span></label>
+            <input type="password" id="registradorContrasena" class="control" placeholder="Asigna una contraseña" required />
+          </div>
+          <div class="campo" style="margin-bottom:0;">
+            <button type="button" id="btnConsultarReportes" class="btn btn-secundario btn-block" style="height: 46px;">
+              Consultar mis reportes
+            </button>
+          </div>
+        </div>
+        <p class="campo ayuda" style="margin-top:10px; margin-bottom:0;">Usa tu correo y contraseña para guardar borradores y actualizar la información de tus apartamentos más adelante.</p>
+      </div>
+    </section>
+
+    <!-- Reportes ya guardados por este usuario (para edición) -->
+    <section id="misReportes" class="card oculto">
+      <div class="card-head">
+        <span class="icono"><svg class="icono-svg" aria-hidden="true"><use href="#icono-portapapeles"/></svg></span>
+        <h2>Tus reportes guardados</h2>
+      </div>
+      <div class="card-body">
+        <p class="campo ayuda" style="margin-top:0;">Toca "Continuar / editar" para completar o modificar los detalles de un apartamento registrado.</p>
+        <div id="misReportesLista"></div>
+      </div>
+    </section>
+
+    <!-- Datos del Apartamento -->
+    <section class="card" id="seccionApartamento">
+      <div class="card-head">
+        <span class="icono"><svg class="icono-svg" aria-hidden="true"><use href="#icono-marcador"/></svg></span>
+        <h2>Datos del Apartamento</h2>
+      </div>
+      <div class="card-body">
+        <div class="campo-fila">
+          <div class="campo">
+            <label for="torre">Torre<span class="req">*</span></label>
+            <select id="torre" class="control" required>
+              <option value="">— Selecciona la torre —</option>
+              <option value="Torre 1">Torre 1</option>
+              <option value="Torre 2">Torre 2</option>
+              <option value="Torre 3">Torre 3</option>
+              <option value="Torre 4">Torre 4</option>
+              <option value="Torre 5">Torre 5</option>
+              <option value="Torre 6">Torre 6</option>
+              <option value="Torre 7">Torre 7</option>
+              <option value="Torre 8">Torre 8</option>
+              <option value="Torre 9">Torre 9</option>
+              <option value="Torre 10">Torre 10</option>
+              <option value="Torre 11">Torre 11</option>
+              <option value="Torre 12">Torre 12</option>
+              <option value="Torre 13">Torre 13</option>
+              <option value="Torre 14">Torre 14</option>
+              <option value="Torre 15">Torre 15</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="apartamento">Número de Apartamento<span class="req">*</span></label>
+            <input type="text" id="apartamento" class="control" placeholder="Ej: 101, 1504" required />
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Nivel de afectación</label>
+          <div class="chips" id="nivelChips" data-valor="">
+            <button type="button" class="chip" data-nivel="Sin daños">Sin daños</button>
+            <button type="button" class="chip" data-nivel="Leve">Leve</button>
+            <button type="button" class="chip" data-nivel="Moderado">Moderado</button>
+            <button type="button" class="chip" data-nivel="Grave">Grave</button>
+            <button type="button" class="chip" data-nivel="Inhabilitada">Inhabilitada</button>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="descripcion">Descripción del daño</label>
+          <textarea id="descripcion" class="control" placeholder="Describe cómo quedó el apartamento: fisuras en muros, problemas en tuberías, desprendimiento de cielo raso, etc."></textarea>
+        </div>
+
+        <div class="campo">
+          <label>Fotos</label>
+          <div class="adjuntos">
+            <label class="adjuntos-btn">
+              <svg class="icono-svg" aria-hidden="true"><use href="#icono-camara"/></svg>
+              Adjuntar fotos
+              <input type="file" id="fotosInput" accept="image/*" multiple style="display:none;" />
+            </label>
+            <div id="fotosLista"></div>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Videos</label>
+          <div class="adjuntos">
+            <label class="adjuntos-btn">
+              <svg class="icono-svg" aria-hidden="true"><use href="#icono-video"/></svg>
+              Adjuntar videos
+              <input type="file" id="videosInput" accept="video/*" multiple style="display:none;" />
+            </label>
+            <div id="videosLista"></div>
+          </div>
+        </div>
+
+        <div class="campo" style="margin-bottom:0;">
+          <label>Documentos</label>
+          <div class="adjuntos">
+            <label class="adjuntos-btn">
+              <svg class="icono-svg" aria-hidden="true"><use href="#icono-documento"/></svg>
+              Adjuntar documentos
+              <input type="file" id="documentosInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" multiple style="display:none;" />
+            </label>
+            <p class="campo ayuda" style="margin-top:6px; margin-bottom:0;">Informes de peritaje u otros PDF/Word/Excel relevantes.</p>
+            <div id="documentosLista"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Envío -->
+    <div class="acciones-envio">
+      <button type="button" id="btnEnviar" class="btn btn-primario btn-block" disabled>
+        Guardar y enviar reporte
+      </button>
+      <p class="campo ayuda" style="margin-top:8px; margin-bottom:0; text-align:center;">
+        Puedes guardar tu reporte incluso si no tienes evidencias o descripción final para completarlo posteriormente.
+      </p>
+    </div>
+  </form>
+
+  <!-- Pantalla de envío en curso -->
+  <section id="pantallaEnvio" class="pantalla-envio oculto">
+    <div class="spinner"></div>
+    <p class="titulo">Enviando reporte…</p>
+    <p class="detalle" id="detalleEnvio">Preparando envío</p>
+    <div class="barra-global"><div class="relleno" id="barraGlobalRelleno"></div></div>
+    <div id="listaProgresoSedes" class="lista-progreso-sedes"></div>
+  </section>
+
+  <!-- Pantalla de resultado -->
+  <section id="pantallaResultado" class="pantalla-envio oculto">
+    <div id="resultadoIcono" class="icono-resultado"></div>
+    <p class="titulo" id="resultadoTitulo">Reporte enviado</p>
+    <p class="detalle" id="resultadoDetalle"></p>
+    <div id="listaResultadoSedes" class="lista-progreso-sedes"></div>
+    <div style="display:flex; gap:10px; margin-top:18px; justify-content:center; flex-wrap:wrap;">
+      <button type="button" id="btnReintentarFallidas" class="btn btn-primario oculto">Reintentar las que fallaron</button>
+      <button type="button" id="btnNuevoReporte" class="btn btn-secundario">Registrar otro apartamento</button>
+    </div>
+  </section>
+
+  <p class="footer-creditos">Administración Club Residencial El Nogal</p>
+
+</main>
+
+<!-- ─── Plantillas (clonadas por JS) ─────────────────────── -->
+
+<template id="plantillaArchivo">
+  <div class="archivo-item" data-archivo-item>
+    <img class="miniatura oculto" data-role="miniatura" alt="" />
+    <div class="icono-video oculto" data-role="icono-video">
+      <svg class="icono-svg" aria-hidden="true" data-role="icono-tipo"><use href="#icono-camara"/></svg>
+    </div>
+    <div class="info">
+      <div class="nombre" data-role="nombre"></div>
+      <div class="peso" data-role="peso"></div>
+      <div class="progreso-archivo oculto" data-role="progreso-wrap">
+        <div class="relleno" data-role="progreso-relleno"></div>
+      </div>
+    </div>
+    <button type="button" class="quitar" data-role="quitar-archivo" title="Quitar">
+      <svg class="icono-svg" aria-hidden="true"><use href="#icono-x"/></svg>
+    </button>
+  </div>
+</template>
+
+<template id="plantillaReporteGuardado">
+  <div class="progreso-sede-item" data-reporte-item style="align-items:center; justify-content:space-between; gap:10px;">
+    <span class="nombre" data-role="texto"></span>
+    <span class="badge-registrada" data-role="badge"></span>
+    <button type="button" class="btn-texto" data-role="editar">Continuar / editar</button>
+  </div>
+</template>
+
+<!-- Modal de previsualización de evidencias ya subidas -->
+<div id="modalPrevia" class="modal-previa oculto" data-role="modal-previa">
+  <div class="modal-previa-fondo" data-role="modal-cerrar"></div>
+  <div class="modal-previa-caja">
+    <div class="modal-previa-barra">
+      <div class="modal-previa-titulo">
+        <span class="modal-previa-tipo" data-role="modal-tipo"></span>
+        <span class="modal-previa-nombre" data-role="modal-nombre"></span>
+      </div>
+      <div class="modal-previa-acciones">
+        <a class="btn-texto" data-role="modal-abrir" href="#" target="_blank" rel="noopener">Abrir en Drive</a>
+        <button type="button" class="modal-previa-cerrar" data-role="modal-cerrar" title="Cerrar">
+          <svg class="icono-svg" aria-hidden="true"><use href="#icono-x"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="modal-previa-cuerpo" data-role="modal-cuerpo"></div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/upload.js"></script>
+<script src="js/form.js"></script>
+</body>
+</html>
